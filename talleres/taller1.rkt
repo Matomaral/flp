@@ -1,15 +1,42 @@
 #lang eopl
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; PARTICIPANTES                                 ;;    
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; SANTIAGO ROJAS BARRENECHE -> 1841765          ;;
+;; MATEO OBANDO GUTIERREZ -> 1844983             ;;
+;; SANTIAGO CASTAÑO DE LA CRUZ -> 1840309        ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;; Punto 1
+;; copy: integer x element -> list
+;; Proposito:
+;; Procedimineto que retorna una lista con n recurrencias de x
+
+(define copy
+         (lambda(n x)
+           (cond
+             [(<= n 0) empty]
+             [else (cons x (copy (- n 1) x))])))
+
+;; Pruebas
+(copy 7 'seven)
+(copy 4 (list 1 2 3))
+(copy 0 (list 5 6 7))
+
+
 ;; Punto 2
-;; list-tails :
+;; list-tails: list -> list
 ;; Proposito:
 ;; retornar en una lista todas las
 ;;sublistas de los elementos consecutivos de la lista
 ;;
+
 (define list-tails
-(lambda (L)
-(if (null? L)empty
-(cons (cons(car L)(cdr L)) (list-tails (cdr L)))     
-)))
+  (lambda (L)
+    (if (null? L) empty (cons (cons(car L)(cdr L)) (list-tails (cdr L))))
+  )
+)
 
 ;; Pruebas
 (list-tails '(1 2 3 4 5))
@@ -18,9 +45,9 @@
 (list-tails '(7 8 9 10 11 9))
 
 ;; Punto 3
-;; sublist :
+;; sublist : list integer integer -> list
 ;; Proposito:
-;; sublist retorna la sublista entre el elemento en posicion inicial (posicionInicial) y el elemento en posicion final (posicionFinal)
+;; sublist retorna la sublista entre el elemento en posicion inicial (posicionInicial) y el elemento en posicion final (posicionFinal) de la lista (L)
 ;;
 
 (define (sublist L posicionInicial posicionFinal)
@@ -35,8 +62,26 @@
 (sublist '(a b c d e) 1 3)
 (sublist '((a b) c a b c 9) 3 4)
 
+;; Punto 4
+;; exists? : predicado x list -> Boolean
+;; proposito:
+;; La funcion retorna #t si algun elemento de la lista L 
+;; satisface el predicado P. Devuelve #f en caso contrario.
+
+(define exists?
+            (lambda (P L)
+              (cond
+                [(null? L)#F]
+                [(P (car L)) #T]
+                [else (exists? P (cdr L))])))
+;; Pruebas
+(exists? number? '(a b c 3 e))
+(exists? number? '(a b c d e))
+(exists? real? '(a b c))
+
 ;; Punto 5
-;; auxsuma-fibo
+;; auxsuma-fibo: integer -> integer
+;; Proposito:
 ;; crea la sucesion de fibonacci
 
 (define auxsuma-fibo
@@ -45,19 +90,22 @@
       [(= n 0) 0]
       [(= n 1) 1]
       [else (+ (auxsuma-fibo (- n 1))(auxsuma-fibo (- n 2)))]
-      )))
+    )
+  )
+)
+;; Pruebas
 
-;; auxlista-fibo
+;; auxlista-fibo: integer -> list
+;; Proposito:
 ;; crea una lista con cada numero de fibonacci
 
 (define auxlista-fibo
   (lambda (n)
-    (if (>= n 0)
-        (cons (auxsuma-fibo n) (auxlista-fibo (- n 1)))empty
-        ))             
-  )
+    (if (>= n 0) (cons (auxsuma-fibo n) (auxlista-fibo (- n 1))) empty)
+  )             
+)
 
-;; list-fibo :
+;; list-fibo: integer -> list
 ;; Proposito:
 ;; recibe como argumento un numero entero n,
 ;; y retorna una lista ascendente con los n-terminos de la sucesion Fibonacci.
@@ -65,7 +113,9 @@
 
 (define list-fibo
   (lambda (n)
-    (reverse (auxlista-fibo n))))
+    (reverse (auxlista-fibo n))
+  )
+)
 
 ;; Pruebas
 (list-fibo 6)
@@ -74,7 +124,7 @@
 (list-fibo 20)
 
 ;; Punto 6
-;; aux-factorial:
+;; aux-factorial: integer -> integer
 ;; Proposito:
 ;; aux-factorial calcula el factorial de n
 ;;
@@ -90,7 +140,7 @@
 (aux-factorial 7)
 (aux-factorial 3)
 
-;; list-facts-two-increase:
+;; list-facts-two-increase: integer function integer -> list
 ;; Proposito:
 ;; list-facst-two-increase genera una lista factoriales, partiendo desde el (inicio) hasta el (final) pero donde cada numero a partir de inicio (sin incluirle)
 ;; es aplicado un factor por (factor (es una funcion)) y donde el ultimo numero es el factorial de (final)
@@ -107,7 +157,7 @@
 (list-facts-two-increase 8 (lambda (x) (* 2 x)) 2)
 (list-facts-two-increase 7 (lambda (x) (+ 1 (* 2 x))) 1)
 
-;; list-facts-two:
+;; list-facts-two: integer -> list
 ;; Proposito:
 ;; list-facts-two recibe como argumento un numero entero n, y retorna una lista incremental de factoriales dobles. Un
 ;; factorial doble inicia en 1! si n es impar y continuara calculando los factoriales de los numeros impares hasta n!.
@@ -125,8 +175,28 @@
 (list-facts-two 5)
 (list-facts-two 8)
 
+;; Punto 7
+;; count-occurrences: element list -> integer
+;; Proposito
+;; retorna el numero de ocurrencias del elemento x en la lista L.
+(define count-occurrences
+  (lambda(x L)
+    (if(null? L)
+       0
+       (+ (count-occurrences-aux x (car L))
+           (count-occurrences x (cdr L))))))
+
+(define count-occurrences-aux
+  (lambda (x exp)
+   (if(or(symbol? exp) (number? exp))
+       (if(eqv? x exp) 1 0)
+       (count-occurrences x exp))))
+;; Pruebas
+(count-occurrences 2 '((f x) y (((x 2) x))))
+(count-occurrences 'x '((f x) y (((x z) () x))))
+
 ;; Punto 8
-;; flatten :
+;; flatten: list -> list
 ;; Proposito:
 ;; Recibe como argumento una lista L y devuelve la lista eliminando los parentesis internos
 
@@ -145,7 +215,7 @@
 (flatten '((a b c (a)(e i 2)(3)  (d e f)())))
 
 ;; Punto 9:
-;; every?:
+;; every?: function list -> boolean
 ;; Proposito:
 ;; every? retorna #t si TODOS los elementos de la lista (lista) satisfacen el predicado (predicado). Devuelve #f en caso contrario
 
@@ -158,9 +228,33 @@
 )
 
 ;; Pruebas:
-
 (every? symbol? '(a b c 3 e))
 (every? number? '(1 2 3 5 4))
+
+;; Punton 10
+;; reverse-digits-aux: 
+;; proposito:
+;;
+(define reverse-digits-aux
+     (lambda (n rev) (if (> n 0)
+                (reverse-digits-aux  (truncate (/ n 10)) (+(modulo n 10) (* rev 10)))
+               rev)))
+;; Pruebas:
+(reverse-digits-aux 120 0)
+(reverse-digits-aux 12 0)
+(reverse-digits-aux 3 0)
+;; reverse-digits
+;; Proposito:
+;;
+(define reverse-digits
+     (lambda (n) (if (> n 0)
+                  (reverse-digits-aux n 0)
+               n))) 
+
+;; Pruebas
+(reverse-digits 12) 
+(reverse-digits 123)
+(reverse-digits 1234)
 
 ;; Punto 11
 ;; merge
@@ -198,6 +292,20 @@
 ;; Pruebas:
 (zip + '(1 4) '(6 2))
 (zip * '(11 5 6) '(10 9 8))
+
+;; Punto 13
+;; filter-acum
+;; Proposito:
+;;
+(define filter-acum
+  (lambda (a b F acum filter)
+    (cond
+      [(<= a b)(cond
+                [(filter a) (+ acum (filter-acum (+ a 1) b F a filter))]
+                [else (filter-acum (+ a 1) b F acum filter)])]
+      [else acum])))
+;; Pruebas
+
 
 ;; Punto 15
 ;; hermite:
