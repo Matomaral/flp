@@ -1,0 +1,5 @@
+;; Casos de Prueba para Taller 1
+;; Cada caso de prueba debe de ser escrito de la sgte forma:
+;; (writeln (test-case nombreFuncion (argumentos)* resultadoEsperado))
+;;
+(writeln (test-case every? number? '(2 3 5 6 7 8) #t))
