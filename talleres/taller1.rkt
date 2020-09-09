@@ -80,6 +80,8 @@
 (exists? real? '(a b c))
 
 ;; Punto 5
+
+;;AUXILIARES
 ;; auxsuma-fibo: integer -> integer
 ;; Proposito:
 ;; crea la sucesion de fibonacci
@@ -93,7 +95,9 @@
     )
   )
 )
-;; Pruebas
+
+;;pruebas
+(auxsuma-fibo 6)
 
 ;; auxlista-fibo: integer -> list
 ;; Proposito:
@@ -105,11 +109,13 @@
   )             
 )
 
+;;pruebas
+(auxlista-fibo 5)
+
 ;; list-fibo: integer -> list
 ;; Proposito:
 ;; recibe como argumento un numero entero n,
 ;; y retorna una lista ascendente con los n-terminos de la sucesion Fibonacci.
-
 
 (define list-fibo
   (lambda (n)
@@ -231,7 +237,7 @@
 (every? symbol? '(a b c 3 e))
 (every? number? '(1 2 3 5 4))
 
-;; Punton 10
+;; Punto 10
 ;; reverse-digits-aux: 
 ;; proposito:
 ;;
@@ -257,7 +263,7 @@
 (reverse-digits 1234)
 
 ;; Punto 11
-;; merge
+;; merge: list, list -> list 
 ;; Proposito: retorna una lista ordenada de todos los elementos de las listas L1 y L2.
 
 (define (merge L1 L2)
@@ -306,6 +312,78 @@
       [else acum])))
 ;; Pruebas
 
+;;Punto 14
+
+;;Auxiliares Sort
+
+;;Proposito:
+;;Ordenar la lista de manera ascendente
+(define sortMenorAux
+         (lambda (L)
+    (if (null? (cdr L))L              
+        (if (< (car L) (cadr L)) 
+            (cons (car L) (sortMenorAux (cdr L)))                 
+            (cons (cadr L) (sortMenorAux (cons (car L) (cddr L))))))))
+
+;;Proposito:
+;;Funcion auxiliar para ejecutar bien la funcion sortMenorAux
+(define sort-aux
+  (lambda (tamano Lista)    
+    (cond ((= tamano 1) (sortMenorAux Lista))   
+          (else (sort-aux (- tamano 1) (sortMenorAux Lista))))))
+
+;;Funcion que ejecuta las dos funciones anteriores y asi ordenar de manera correcta la lista
+(define sortMenor
+  (lambda (L) 
+    (sort-aux (length L) L)))
+
+;; AUXILIARES SORT STRING
+;; Mismos propositos que las anteriores pero usadas para string.
+
+(define stringSortMenorAux
+  (lambda (L)
+    (if (null? (cdr L))L              
+        (if (string<? (car L) (cadr L)) 
+            (cons (car L) (stringSortMenorAux (cdr L)))                 
+            (cons (cadr L) (stringSortMenorAux (cons (car L) (cddr L))))))))
+
+
+(define stringSort-aux
+  (lambda (tamano Lista)    
+    (cond ((= tamano 1) (stringSortMenorAux Lista))   
+          (else (stringSort-aux (- tamano 1) (stringSortMenorAux Lista))))))
+
+(define stringSortMenor
+  (lambda (L) 
+    (stringSort-aux (length L) L)))
+;;________________________________________________________________________________
+;; sort: list, function comparation -> list
+;; proposito:
+;;retorna una lista ordenada aplicando la funcion de comparacion correspondiente.
+;; < lista ordenada ascendentemente.
+;; > lista ordenada descendentemente.
+;; string<? lista de strings ordenada ascendentemente.
+;; string>? lista de strings ordenada descendentemente.
+
+(define sort
+  (lambda (L F)
+    (cond
+      [(equal? F <)(sortMenor L)]        
+      [(equal? F >)(reverse(sortMenor L))]
+      [(equal? F string<?)(stringSortMenorAux L)]
+      [(equal? F string>?)(reverse(stringSortMenorAux L))])))
+
+
+;;pruebas
+
+> (sort '(8 2 5 2 3) <)
+
+> (sort '(8 2 5 2 3) >)
+
+> (sort '("a" "c" "bo" "za" "lu") string>?)
+
+> (sort '("a" "c" "bo" "za" "lu") string<?)
+
 
 ;; Punto 15
 ;; hermite:
@@ -327,6 +405,7 @@
 
 ;; Punto 16
 ;; FUNCIONES AUXILIARES
+
 ;; bubble-algorithm
 ;; La funcion ejecuta el algoritmo bubble-sort con los pasos correspondientes explicados a continuación.
 
@@ -346,7 +425,7 @@
           (else (bubble-sort-aux (- tamano 1) (bubble-algorithm Lista)))))
 
 
-;; bubble-sort
+;; bubble-sort: list -> list
 ;; Proposito:
 ;; recibe como entrada una lista de numeros L y retorna la lista L ordenada de manera ascendente.
 
